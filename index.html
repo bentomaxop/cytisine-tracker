@@ -1,0 +1,475 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>Cytisine Warrior - 40-Day Battle</title>
+<style>
+@import url('https://fonts.googleapis.com/css2?family=Cinzel:wght@400;700;900&family=Inter:wght@400;600;700&display=swap');
+:root{--bg:#0a0a0f;--card:#12121c;--gold:#fbbf24;--fire:#ef4444;--blood:#dc2626;--steel:#94a3b8;--text:#f1f5f9;--muted:#64748b;--border:#1e293b;--green:#22c55e}
+*{margin:0;padding:0;box-sizing:border-box}
+body{font-family:'Inter',system-ui,sans-serif;background:var(--bg);color:var(--text);min-height:100vh;padding:16px;background-image:radial-gradient(ellipse at 50% 0%,rgba(245,158,11,0.06) 0%,transparent 60%)}
+.header{text-align:center;padding:28px 0 12px}
+.header h1{font-family:'Cinzel',serif;font-size:2.2rem;font-weight:900;color:var(--gold);text-shadow:0 0 30px rgba(245,158,11,0.3);letter-spacing:2px}
+.header .subtitle{font-family:'Cinzel',serif;color:var(--steel);font-size:0.85rem;letter-spacing:4px;text-transform:uppercase;margin-top:6px}
+.header .war-cry{color:var(--fire);font-weight:700;font-size:1rem;margin-top:10px;font-family:'Cinzel',serif}
+.stats{display:grid;grid-template-columns:repeat(auto-fit,minmax(140px,1fr));gap:12px;max-width:720px;margin:16px auto}
+.stat-card{background:linear-gradient(135deg,var(--card),#1a1a2e);border:1px solid #2a2a3a;border-radius:12px;padding:16px;text-align:center;position:relative;overflow:hidden}
+.stat-card::before{content:'';position:absolute;top:0;left:0;right:0;height:2px;background:linear-gradient(90deg,transparent,var(--gold),transparent)}
+.stat-card .num{font-family:'Cinzel',serif;font-size:1.7rem;font-weight:900;color:var(--gold)}
+.stat-card .label{font-size:0.7rem;color:var(--muted);text-transform:uppercase;letter-spacing:2px;margin-top:4px}
+.progress-wrap{max-width:720px;margin:16px auto}
+.progress-bar{width:100%;height:24px;background:#1a1a2e;border-radius:12px;overflow:hidden;border:1px solid #2a2a3a}
+.progress-fill{height:100%;background:linear-gradient(90deg,var(--blood),var(--fire),var(--gold));border-radius:12px;transition:width 0.6s ease}
+.progress-label{text-align:center;font-size:0.85rem;color:var(--steel);margin-top:6px;font-family:'Cinzel',serif;letter-spacing:1px}
+.controls{display:flex;justify-content:center;gap:10px;margin:16px auto;flex-wrap:wrap}
+.controls button{padding:10px 22px;border-radius:10px;border:1px solid #2a2a3a;background:var(--card);color:var(--steel);font-size:0.85rem;cursor:pointer;transition:all 0.2s;font-family:'Cinzel',serif;letter-spacing:1px;text-transform:uppercase}
+.controls button:hover{border-color:var(--gold);color:var(--gold)}
+.controls button.active{border-color:var(--gold);background:rgba(245,158,11,0.1);color:var(--gold);font-weight:700;box-shadow:0 0 15px rgba(245,158,11,0.15)}
+.day-card{max-width:720px;margin:14px auto;background:linear-gradient(135deg,var(--card),#151525);border:1px solid #2a2a3a;border-radius:16px;padding:22px;transition:all 0.3s;position:relative;overflow:hidden}
+.day-card::before{content:'';position:absolute;top:0;left:0;right:0;height:2px;background:linear-gradient(90deg,transparent,#333,transparent)}
+.day-card.today{border-color:var(--gold);box-shadow:0 0 30px rgba(245,158,11,0.12)}
+.day-card.today::before{background:linear-gradient(90deg,transparent,var(--gold),transparent)}
+.day-card.completed{border-color:var(--green);box-shadow:0 0 20px rgba(34,197,94,0.1)}
+.day-card.completed::before{background:linear-gradient(90deg,transparent,var(--green),transparent)}
+.day-header{display:flex;justify-content:space-between;align-items:center;margin-bottom:16px;flex-wrap:wrap;gap:8px}
+.day-title{font-family:'Cinzel',serif;font-size:1.2rem;font-weight:900;color:var(--gold)}
+.today-badge{font-size:0.65rem;background:var(--gold);color:var(--bg);padding:3px 10px;border-radius:6px;margin-left:8px;font-weight:700;letter-spacing:1px;vertical-align:middle;animation:pulse 2s infinite}
+.done-badge{font-size:0.65rem;background:var(--green);color:var(--bg);padding:3px 10px;border-radius:6px;margin-left:8px;font-weight:700;letter-spacing:1px;vertical-align:middle}
+@keyframes pulse{0%,100%{opacity:1}50%{opacity:0.7}}
+.day-meta{font-size:0.78rem;color:var(--muted);font-family:'Cinzel',serif;letter-spacing:1px}
+.doses{display:flex;flex-wrap:wrap;gap:10px}
+.dose-btn{display:flex;align-items:center;gap:10px;padding:12px 18px;border-radius:12px;border:2px solid #2a2a3a;background:rgba(10,10,15,0.6);cursor:pointer;transition:all 0.25s;min-width:130px}
+.dose-btn:hover{border-color:var(--gold);transform:translateY(-2px);box-shadow:0 4px 15px rgba(245,158,11,0.1)}
+.dose-btn.taken{border-color:var(--green);background:rgba(34,197,94,0.08)}
+.dose-btn.taken .check{background:var(--green);border-color:var(--green);box-shadow:0 0 10px rgba(34,197,94,0.4)}
+.dose-btn .check{width:26px;height:26px;border-radius:8px;border:2px solid #3a3a4a;display:flex;align-items:center;justify-content:center;flex-shrink:0;transition:all 0.25s;font-size:14px}
+.dose-btn .dose-info{display:flex;flex-direction:column}
+.dose-btn .dose-time{font-size:0.95rem;font-weight:700;color:var(--text);font-family:'Cinzel',serif}
+.dose-btn .dose-label{font-size:0.68rem;color:var(--muted);text-transform:uppercase;letter-spacing:1px}
+.quote-overlay{position:fixed;top:0;left:0;right:0;bottom:0;background:rgba(0,0,0,0.88);z-index:1000;display:flex;align-items:center;justify-content:center;padding:20px;opacity:0;pointer-events:none;transition:opacity 0.4s ease}
+.quote-overlay.show{opacity:1;pointer-events:all}
+.quote-modal{background:linear-gradient(135deg,#1a1a2e,#12121c);border:2px solid var(--gold);border-radius:20px;padding:36px 30px;max-width:500px;width:100%;text-align:center;box-shadow:0 0 60px rgba(245,158,11,0.2);transform:scale(0.8);transition:transform 0.4s ease}
+.quote-overlay.show .quote-modal{transform:scale(1)}
+.quote-modal .sword-icon{font-size:3rem;margin-bottom:12px}
+.quote-modal .verse{font-family:'Cinzel',serif;font-size:1.15rem;color:var(--gold);line-height:1.7;margin-bottom:16px;text-shadow:0 0 20px rgba(245,158,11,0.2)}
+.quote-modal .reference{font-size:0.85rem;color:var(--steel);font-family:'Cinzel',serif;letter-spacing:2px}
+.quote-modal .war-message{color:var(--fire);font-weight:700;font-size:0.95rem;margin-top:16px;font-family:'Cinzel',serif;text-transform:uppercase;letter-spacing:2px}
+.quote-modal .dismiss{margin-top:20px;padding:10px 28px;border:1px solid var(--gold);border-radius:10px;background:rgba(245,158,11,0.1);color:var(--gold);font-family:'Cinzel',serif;font-weight:700;font-size:0.85rem;cursor:pointer;text-transform:uppercase;letter-spacing:2px;transition:all 0.2s}
+.quote-modal .dismiss:hover{background:rgba(245,158,11,0.2);box-shadow:0 0 15px rgba(245,158,11,0.2)}
+.date-picker-row{max-width:720px;margin:12px auto;display:flex;align-items:center;justify-content:center;gap:10px;flex-wrap:wrap}
+.date-picker-row label{color:var(--steel);font-size:0.85rem;font-family:'Cinzel',serif;letter-spacing:1px}
+.date-picker-row input{padding:8px 14px;border-radius:10px;border:1px solid #2a2a3a;background:var(--card);color:var(--text);font-size:0.9rem}
+.date-picker-row .deploy-btn{padding:8px 18px;border-radius:10px;border:1px solid var(--gold);background:rgba(245,158,11,0.1);color:var(--gold);cursor:pointer;font-family:'Cinzel',serif;font-weight:700;letter-spacing:1px;transition:all 0.2s;font-size:0.9rem}
+.date-picker-row .deploy-btn:hover{background:rgba(245,158,11,0.25);box-shadow:0 0 15px rgba(245,158,11,0.2)}
+.date-picker-row .status{font-size:0.8rem;color:var(--fire);font-family:'Cinzel',serif}
+.hidden{display:none !important}
+.war-banner{text-align:center;max-width:720px;margin:12px auto;padding:14px 20px;background:linear-gradient(135deg,rgba(239,68,68,0.08),rgba(245,158,11,0.08));border:1px solid #2a2a3a;border-radius:12px;font-family:'Cinzel',serif;font-size:0.9rem;color:var(--steel)}
+.reset-section{text-align:center;margin:30px auto}
+.reset-section button{padding:8px 16px;border-radius:8px;border:1px solid var(--blood);background:transparent;color:var(--blood);cursor:pointer;font-size:0.8rem;font-family:'Cinzel',serif;letter-spacing:1px}
+.reset-section button:hover{background:rgba(220,38,38,0.1)}
+.particles{position:fixed;top:0;left:0;width:100%;height:100%;pointer-events:none;z-index:0;overflow:hidden}
+.particle{position:absolute;width:2px;height:2px;background:var(--gold);border-radius:50%;opacity:0;animation:floatUp 6s infinite}
+@keyframes floatUp{0%{opacity:0;transform:translateY(100vh) scale(0)}20%{opacity:0.6}80%{opacity:0.3}100%{opacity:0;transform:translateY(-20px) scale(1)}}
+body>*:not(.particles):not(.quote-overlay){position:relative;z-index:1}
+@keyframes victoryShake{0%{transform:translateX(0)}25%{transform:translateX(-3px)}50%{transform:translateX(3px)}75%{transform:translateX(-2px)}100%{transform:translateX(0)}}
+.shake{animation:victoryShake 0.3s ease}
+@media(max-width:500px){.doses{flex-direction:column}.dose-btn{min-width:unset}.stats{grid-template-columns:repeat(2,1fr)}.header h1{font-size:1.6rem}.quote-modal .verse{font-size:1rem}}
+</style>
+</head>
+<body>
+<div class="particles" id="particles"></div>
+
+<div class="quote-overlay" id="quoteOverlay">
+  <div class="quote-modal">
+    <div class="sword-icon" id="swordIcon"></div>
+    <div class="verse" id="quoteVerse"></div>
+    <div class="reference" id="quoteRef"></div>
+    <div class="war-message" id="warMessage"></div>
+    <button class="dismiss" id="dismissBtn">CONTINUE THE FIGHT</button>
+  </div>
+</div>
+
+<div class="header">
+  <h1 id="mainTitle"></h1>
+  <div class="subtitle">40 Days to Slay the Nicotine Dragon</div>
+  <div class="war-cry" id="warCry"></div>
+</div>
+
+<div class="date-picker-row">
+  <label>Battle Begins:</label>
+  <input type="date" id="startDate">
+  <button class="deploy-btn" id="deployBtn">DEPLOY</button>
+  <span class="status" id="dateStatus"></span>
+</div>
+
+<div class="stats">
+  <div class="stat-card"><div class="num" id="currentDay">--</div><div class="label">Day of War</div></div>
+  <div class="stat-card"><div class="num" id="dosesToday">--</div><div class="label">Rounds Fired</div></div>
+  <div class="stat-card"><div class="num" id="totalCompleted">--</div><div class="label">Battles Won</div></div>
+  <div class="stat-card"><div class="num" id="streakDisplay"></div><div class="label">War Streak</div></div>
+</div>
+
+<div class="progress-wrap">
+  <div class="progress-bar"><div class="progress-fill" id="progressFill" style="width:0%"></div></div>
+  <div class="progress-label" id="progressLabel">The war begins...</div>
+</div>
+
+<div class="war-banner" id="warBanner"></div>
+
+<div class="controls">
+  <button id="btnToday" class="active">TODAY</button>
+  <button id="btnAll">ALL DAYS</button>
+  <button id="btnSchedule">BATTLE PLAN</button>
+</div>
+
+<div id="dayCards"></div>
+
+<div id="scheduleView" class="hidden" style="max-width:720px;margin:12px auto;">
+  <table style="width:100%;border-collapse:collapse;background:var(--card);border-radius:14px;overflow:hidden;">
+    <thead><tr style="background:rgba(245,158,11,0.1);">
+      <th style="padding:12px;text-align:left;color:var(--gold);font-family:Cinzel,serif;font-size:0.8rem;letter-spacing:1px;">PHASE</th>
+      <th style="padding:12px;text-align:center;color:var(--gold);font-family:Cinzel,serif;font-size:0.8rem;">ROUNDS</th>
+      <th style="padding:12px;text-align:center;color:var(--gold);font-family:Cinzel,serif;font-size:0.8rem;">INTERVAL</th>
+      <th style="padding:12px;text-align:left;color:var(--gold);font-family:Cinzel,serif;font-size:0.8rem;">DEPLOY TIMES</th>
+    </tr></thead>
+    <tbody style="font-size:0.9rem;">
+      <tr><td style="padding:10px;border-top:1px solid #2a2a3a;">Day 1</td><td style="text-align:center;border-top:1px solid #2a2a3a;">2</td><td style="text-align:center;border-top:1px solid #2a2a3a;">12h</td><td style="border-top:1px solid #2a2a3a;">8 AM, 8 PM</td></tr>
+      <tr><td style="padding:10px;border-top:1px solid #2a2a3a;">Day 2</td><td style="text-align:center;border-top:1px solid #2a2a3a;">3</td><td style="text-align:center;border-top:1px solid #2a2a3a;">6h</td><td style="border-top:1px solid #2a2a3a;">8 AM, 2 PM, 8 PM</td></tr>
+      <tr><td style="padding:10px;border-top:1px solid #2a2a3a;">Day 3</td><td style="text-align:center;border-top:1px solid #2a2a3a;">4</td><td style="text-align:center;border-top:1px solid #2a2a3a;">4h</td><td style="border-top:1px solid #2a2a3a;">8 AM, 12 PM, 4 PM, 8 PM</td></tr>
+      <tr><td style="padding:10px;border-top:1px solid #2a2a3a;">Days 4-7</td><td style="text-align:center;border-top:1px solid #2a2a3a;">5</td><td style="text-align:center;border-top:1px solid #2a2a3a;">3h</td><td style="border-top:1px solid #2a2a3a;">8, 11 AM, 2, 5, 8 PM</td></tr>
+      <tr><td style="padding:10px;border-top:1px solid #2a2a3a;">Days 8-14</td><td style="text-align:center;border-top:1px solid #2a2a3a;">6</td><td style="text-align:center;border-top:1px solid #2a2a3a;">2.5h</td><td style="border-top:1px solid #2a2a3a;">8, 10:30 AM, 1, 3:30, 6, 8:30 PM</td></tr>
+      <tr><td style="padding:10px;border-top:1px solid #2a2a3a;">Days 15-21</td><td style="text-align:center;border-top:1px solid #2a2a3a;">5</td><td style="text-align:center;border-top:1px solid #2a2a3a;">3h</td><td style="border-top:1px solid #2a2a3a;">8, 11 AM, 2, 5, 8 PM</td></tr>
+      <tr><td style="padding:10px;border-top:1px solid #2a2a3a;">Days 22-28</td><td style="text-align:center;border-top:1px solid #2a2a3a;">4</td><td style="text-align:center;border-top:1px solid #2a2a3a;">4h</td><td style="border-top:1px solid #2a2a3a;">8 AM, 12 PM, 4 PM, 8 PM</td></tr>
+      <tr><td style="padding:10px;border-top:1px solid #2a2a3a;">Days 29-35</td><td style="text-align:center;border-top:1px solid #2a2a3a;">3</td><td style="text-align:center;border-top:1px solid #2a2a3a;">6h</td><td style="border-top:1px solid #2a2a3a;">8 AM, 2 PM, 8 PM</td></tr>
+      <tr><td style="padding:10px;border-top:1px solid #2a2a3a;">Days 36-40</td><td style="text-align:center;border-top:1px solid #2a2a3a;">2</td><td style="text-align:center;border-top:1px solid #2a2a3a;">12h</td><td style="border-top:1px solid #2a2a3a;">8 AM, 8 PM</td></tr>
+    </tbody>
+  </table>
+</div>
+
+<div class="reset-section"><button id="resetBtn">SURRENDER & RESET</button></div>
+
+<script>
+(function(){
+  "use strict";
+
+  var SCHEDULE = [
+    {day:1,tablets:2,freq:"Every 12 hours",times:["8:00 AM","8:00 PM"]},
+    {day:2,tablets:3,freq:"Every 6 hours",times:["8:00 AM","2:00 PM","8:00 PM"]},
+    {day:3,tablets:4,freq:"Every 4 hours",times:["8:00 AM","12:00 PM","4:00 PM","8:00 PM"]}
+  ];
+  var i;
+  for(i=4;i<=7;i++) SCHEDULE.push({day:i,tablets:5,freq:"Every 3 hours",times:["8:00 AM","11:00 AM","2:00 PM","5:00 PM","8:00 PM"]});
+  for(i=8;i<=14;i++) SCHEDULE.push({day:i,tablets:6,freq:"Every 2.5 hours",times:["8:00 AM","10:30 AM","1:00 PM","3:30 PM","6:00 PM","8:30 PM"]});
+  for(i=15;i<=21;i++) SCHEDULE.push({day:i,tablets:5,freq:"Every 3 hours",times:["8:00 AM","11:00 AM","2:00 PM","5:00 PM","8:00 PM"]});
+  for(i=22;i<=28;i++) SCHEDULE.push({day:i,tablets:4,freq:"Every 4 hours",times:["8:00 AM","12:00 PM","4:00 PM","8:00 PM"]});
+  for(i=29;i<=35;i++) SCHEDULE.push({day:i,tablets:3,freq:"Every 6 hours",times:["8:00 AM","2:00 PM","8:00 PM"]});
+  for(i=36;i<=40;i++) SCHEDULE.push({day:i,tablets:2,freq:"Every 12 hours",times:["8:00 AM","8:00 PM"]});
+
+  var QUOTES = [
+    ["Be strong and courageous. Do not be afraid; do not be discouraged, for the LORD your God will be with you wherever you go.","Joshua 1:9","YOU ARE NOT FIGHTING ALONE"],
+    ["I can do all things through Christ who strengthens me.","Philippians 4:13","THERE IS NO LIMIT TO YOUR STRENGTH"],
+    ["The LORD is my strength and my shield; my heart trusts in Him, and He helps me.","Psalm 28:7","YOUR SHIELD IS UNBREAKABLE"],
+    ["No weapon forged against you will prevail.","Isaiah 54:17","NOTHING CAN STOP YOU"],
+    ["Be on your guard; stand firm in the faith; be courageous; be strong.","1 Corinthians 16:13","HOLD THE LINE, WARRIOR"],
+    ["The LORD will fight for you; you need only to be still.","Exodus 14:14","THE BATTLE IS ALREADY WON"],
+    ["But those who hope in the LORD will renew their strength. They will soar on wings like eagles.","Isaiah 40:31","YOU ARE RISING ABOVE THIS"],
+    ["The LORD is a warrior; the LORD is His name.","Exodus 15:3","THE ULTIMATE WARRIOR FIGHTS WITH YOU"],
+    ["Put on the full armor of God, so that you can take your stand against the devil's schemes.","Ephesians 6:11","ARMOR UP. EVERY. SINGLE. DAY."],
+    ["For God has not given us a spirit of fear, but of power, and of love, and of a sound mind.","2 Timothy 1:7","FEAR IS A LIE. POWER IS YOUR TRUTH."],
+    ["The righteous cry out, and the LORD hears them; He delivers them from all their troubles.","Psalm 34:17","YOUR CRY HAS BEEN HEARD"],
+    ["Fight the good fight of the faith. Take hold of the eternal life to which you were called.","1 Timothy 6:12","THIS IS THE GOOD FIGHT"],
+    ["When you pass through the waters, I will be with you; and when you pass through the rivers, they will not sweep over you.","Isaiah 43:2","THE FLOOD WILL NOT TAKE YOU"],
+    ["He gives strength to the weary and increases the power of the weak.","Isaiah 40:29","YOUR WEAKNESS BECOMES STRENGTH"],
+    ["The LORD is my rock, my fortress and my deliverer; my God is my rock, in whom I take refuge.","Psalm 18:2","YOU ARE BUILT ON ROCK, NOT SAND"],
+    ["Do not be overcome by evil, but overcome evil with good.","Romans 12:21","YOU ARE THE OVERCOMER"],
+    ["Consider it pure joy whenever you face trials of many kinds, because the testing of your faith produces perseverance.","James 1:2-3","THIS TRIAL IS FORGING YOU INTO STEEL"],
+    ["The LORD your God is in your midst, a mighty one who will save.","Zephaniah 3:17","A MIGHTY ONE STANDS WITH YOU"],
+    ["Wait for the LORD; be strong and take heart and wait for the LORD.","Psalm 27:14","PATIENCE IS A WARRIOR'S WEAPON"],
+    ["So do not fear, for I am with you; do not be dismayed, for I am your God. I will strengthen you and help you.","Isaiah 41:10","HE WILL STRENGTHEN YOU RIGHT NOW"],
+    ["In all these things we are more than conquerors through Him who loved us.","Romans 8:37","YOU ARE MORE THAN A CONQUEROR"],
+    ["He who is in you is greater than he who is in the world.","1 John 4:4","WHAT IS INSIDE YOU IS GREATER THAN ANY CRAVING"],
+    ["I have told you these things, so that in me you may have peace. But take heart! I have overcome the world.","John 16:33","THE WORLD HAS BEEN OVERCOME"],
+    ["The horse is made ready for the day of battle, but victory rests with the LORD.","Proverbs 21:31","PREPARE FOR WAR. VICTORY IS CERTAIN."],
+    ["For I know the plans I have for you, declares the LORD, plans to prosper you and not to harm you.","Jeremiah 29:11","YOUR FUTURE IS WRITTEN IN GLORY"],
+    ["Therefore put on the full armor of God, so that when the day of evil comes, you may be able to stand your ground.","Ephesians 6:13","STAND YOUR GROUND. DO NOT RETREAT."],
+    ["But the Lord is faithful, and He will strengthen you and protect you from the evil one.","2 Thessalonians 3:3","YOU ARE PROTECTED"],
+    ["God is our refuge and strength, an ever-present help in trouble.","Psalm 46:1","YOUR FORTRESS CANNOT FALL"],
+    ["Blessed is the one who perseveres under trial because, having stood the test, that person will receive the crown of life.","James 1:12","THE CROWN IS WAITING FOR YOU"],
+    ["The name of the LORD is a fortified tower; the righteous run to it and are safe.","Proverbs 18:10","RUN TO THE TOWER. YOU ARE SAFE."],
+    ["I sought the LORD, and He answered me; He delivered me from all my fears.","Psalm 34:4","EVERY FEAR HAS BEEN DESTROYED"],
+    ["With God we will gain the victory, and He will trample down our enemies.","Psalm 60:12","YOUR ENEMY IS UNDER YOUR FEET"],
+    ["Not by might nor by power, but by my Spirit, says the LORD Almighty.","Zechariah 4:6","THE SPIRIT IS YOUR WEAPON"],
+    ["The LORD himself goes before you and will be with you; He will never leave you nor forsake you.","Deuteronomy 31:8","HE GOES BEFORE YOU INTO BATTLE"],
+    ["If God is for us, who can be against us?","Romans 8:31","NO ONE. NOTHING. NOT EVEN NICOTINE."],
+    ["Let us not become weary in doing good, for at the proper time we will reap a harvest if we do not give up.","Galatians 6:9","DO NOT GIVE UP. THE HARVEST IS COMING."],
+    ["Finally, be strong in the Lord and in His mighty power.","Ephesians 6:10","HIS POWER FLOWS THROUGH YOU NOW"],
+    ["You armed me with strength for battle; You humbled my adversaries before me.","Psalm 18:39","YOU ARE ARMED AND DANGEROUS"],
+    ["He trains my hands for battle; my arms can bend a bow of bronze.","Psalm 18:34","YOUR HANDS WERE MADE FOR THIS FIGHT"],
+    ["Through You we push back our enemies; through Your name we trample our foes.","Psalm 44:5","TRAMPLE THE ADDICTION UNDER YOUR FEET"],
+    ["The LORD is my light and my salvation; whom shall I fear?","Psalm 27:1","YOU FEAR NOTHING"],
+    ["Resist the devil, and he will flee from you.","James 4:7","RESIST. HE WILL FLEE."],
+    ["I press on toward the goal to win the prize for which God has called me heavenward.","Philippians 3:14","PRESS ON. THE PRIZE IS FREEDOM."],
+    ["For the LORD your God is the one who goes with you to fight for you against your enemies to give you victory.","Deuteronomy 20:4","VICTORY IS A PROMISE, NOT A QUESTION"],
+    ["The thief comes only to steal and kill and destroy; I have come that they may have life, and have it to the full.","John 10:10","NICOTINE CAME TO STEAL. YOU CAME TO LIVE."],
+    ["For our light and momentary troubles are achieving for us an eternal glory that far outweighs them all.","2 Corinthians 4:17","THIS PAIN IS TEMPORARY. YOUR GLORY IS ETERNAL."],
+    ["For the Spirit God gave us does not make us timid, but gives us power, love and self-discipline.","2 Timothy 1:7","SELF-DISCIPLINE IS YOUR SUPERPOWER"],
+    ["Have I not commanded you? Be strong and courageous. Do not be terrified; do not be discouraged.","Joshua 1:9","THIS IS A COMMAND. NOT A SUGGESTION."],
+    ["You, dear children, are from God and have overcome them, because the one who is in you is greater than the one who is in the world.","1 John 4:4","YOU HAVE ALREADY OVERCOME"],
+    ["Be watchful, stand firm in the faith, act like men, be strong.","1 Corinthians 16:13","ACT LIKE THE WARRIOR YOU ARE"]
+  ];
+
+  var WAR_CRIES = [
+    "Every craving you defeat makes you UNSTOPPABLE",
+    "You did not come this far to only come this far",
+    "Warriors do not quit. Warriors CONQUER.",
+    "Pain is temporary. Freedom is FOREVER.",
+    "The enemy wants you weak. PROVE HIM WRONG.",
+    "You are forged in fire. You will NOT break.",
+    "Today you fight. Tomorrow you are FREE.",
+    "This craving is your enemy. DESTROY IT.",
+    "40 days. 40 battles. ZERO DEFEATS.",
+    "Nicotine FEARS the warrior you are becoming"
+  ];
+
+  var BANNERS = [
+    "A warrior does not retreat when the battle gets hard. A warrior CHARGES.",
+    "Every dose is a bullet fired at your chains. Keep shooting.",
+    "You are not quitting something. You are BECOMING someone.",
+    "The dragon of nicotine trembles because you showed up today.",
+    "You have survived 100% of your worst days. Today is no different.",
+    "Iron sharpens iron. This fight is sharpening your soul.",
+    "Your descendants will tell stories of the day you chose freedom.",
+    "Weakness is a choice. And you chose STRENGTH."
+  ];
+
+  var data;
+  try {
+    data = JSON.parse(localStorage.getItem("cytisine_warrior"));
+  } catch(e) {
+    data = null;
+  }
+  if (!data) data = {startDate: null, doses: {}};
+
+  var currentView = "today";
+
+  function save() {
+    localStorage.setItem("cytisine_warrior", JSON.stringify(data));
+  }
+
+  function getCurrentDay() {
+    if (!data.startDate) return -1;
+    var start = new Date(data.startDate + "T00:00:00");
+    var now = new Date();
+    return Math.floor((now - start) / 86400000) + 1;
+  }
+
+  function getPhase(day) {
+    if (day <= 3) return {name: "RAMP UP", color: "#22d3ee"};
+    if (day <= 14) return {name: "PEAK ASSAULT", color: "#ef4444"};
+    if (day <= 28) return {name: "CONTROLLED DESCENT", color: "#fbbf24"};
+    return {name: "FINAL CONQUEST", color: "#22c55e"};
+  }
+
+  function isDoseTaken(day, idx) { return !!data.doses[day + "-" + idx]; }
+
+  function isDayComplete(day) {
+    var s = SCHEDULE[day - 1];
+    if (!s) return false;
+    for (var j = 0; j < s.times.length; j++) {
+      if (!isDoseTaken(day, j)) return false;
+    }
+    return true;
+  }
+
+  function getStreak() {
+    var cd = getCurrentDay();
+    var streak = 0;
+    for (var dd = Math.min(cd - 1, 40); dd >= 1; dd--) {
+      if (isDayComplete(dd)) streak++;
+      else break;
+    }
+    if (cd >= 1 && cd <= 40 && isDayComplete(cd)) streak++;
+    return streak;
+  }
+
+  function getCompletedDays() {
+    var c = 0;
+    for (var dd = 1; dd <= 40; dd++) if (isDayComplete(dd)) c++;
+    return c;
+  }
+
+  function getDateForDay(day) {
+    if (!data.startDate) return "";
+    var dd = new Date(data.startDate + "T00:00:00");
+    dd.setDate(dd.getDate() + day - 1);
+    return dd.toLocaleDateString("en-US", {weekday: "short", month: "short", day: "numeric"});
+  }
+
+  function rand(arr) { return arr[Math.floor(Math.random() * arr.length)]; }
+
+  function showQuote() {
+    var q = rand(QUOTES);
+    document.getElementById("swordIcon").textContent = "\u2694\uFE0F";
+    document.getElementById("quoteVerse").textContent = "\u201C" + q[0] + "\u201D";
+    document.getElementById("quoteRef").textContent = "\u2014 " + q[1];
+    document.getElementById("warMessage").textContent = "\uD83D\uDD25 " + q[2] + " \uD83D\uDD25";
+    document.getElementById("quoteOverlay").classList.add("show");
+  }
+
+  function dismissQuote() {
+    document.getElementById("quoteOverlay").classList.remove("show");
+  }
+
+  // EVENT LISTENERS (no inline onclick!)
+  document.getElementById("quoteOverlay").addEventListener("click", function(e) {
+    if (e.target === this) dismissQuote();
+  });
+  document.getElementById("dismissBtn").addEventListener("click", dismissQuote);
+
+  document.getElementById("deployBtn").addEventListener("click", function() {
+    var v = document.getElementById("startDate").value;
+    if (!v) {
+      document.getElementById("dateStatus").textContent = "\u2190 Pick a date first!";
+      setTimeout(function(){ document.getElementById("dateStatus").textContent = ""; }, 3000);
+      return;
+    }
+    data.startDate = v;
+    save();
+    document.getElementById("dateStatus").textContent = "";
+    render();
+  });
+
+  document.getElementById("btnToday").addEventListener("click", function(){ currentView="today"; updateNav(); render(); });
+  document.getElementById("btnAll").addEventListener("click", function(){ currentView="all"; updateNav(); render(); });
+  document.getElementById("btnSchedule").addEventListener("click", function(){ currentView="schedule"; updateNav(); render(); });
+
+  document.getElementById("resetBtn").addEventListener("click", function() {
+    if (confirm("SURRENDER? Reset ALL battle progress? This cannot be undone.")) {
+      data = {startDate: null, doses: {}};
+      save();
+      document.getElementById("startDate").value = "";
+      render();
+    }
+  });
+
+  function updateNav() {
+    var btns = document.querySelectorAll(".controls button");
+    for (var j = 0; j < btns.length; j++) btns[j].classList.remove("active");
+    if (currentView === "today") document.getElementById("btnToday").classList.add("active");
+    else if (currentView === "all") document.getElementById("btnAll").classList.add("active");
+    else document.getElementById("btnSchedule").classList.add("active");
+  }
+
+  // Make toggleDose available globally for dynamically created buttons
+  window.toggleDose = function(day, idx) {
+    var key = day + "-" + idx;
+    if (data.doses[key]) {
+      delete data.doses[key];
+    } else {
+      data.doses[key] = Date.now();
+      showQuote();
+    }
+    save();
+    render();
+  };
+
+  function render() {
+    var cd = getCurrentDay();
+
+    document.getElementById("mainTitle").textContent = "\u2694\uFE0F THE WARRIOR\u2019S BATTLE \u2694\uFE0F";
+    document.getElementById("warCry").textContent = "\u2694\uFE0F " + rand(WAR_CRIES) + " \u2694\uFE0F";
+    document.getElementById("warBanner").textContent = "\u2694\uFE0F " + rand(BANNERS) + " \u2694\uFE0F";
+
+    if (data.startDate) {
+      document.getElementById("startDate").value = data.startDate;
+      var dt = (cd >= 1 && cd <= 40) ? SCHEDULE[cd - 1] : null;
+      var taken = 0, total = 0;
+      if (dt) { for (var j = 0; j < dt.times.length; j++) { total++; if (isDoseTaken(cd, j)) taken++; } }
+
+      document.getElementById("currentDay").textContent = cd < 1 ? "\u23F3" : cd > 40 ? "\uD83D\uDC51 VICTORY" : "Day " + cd;
+      document.getElementById("dosesToday").textContent = dt ? taken + "/" + total : "--";
+      document.getElementById("totalCompleted").textContent = getCompletedDays() + "/40";
+      document.getElementById("streakDisplay").innerHTML = "\uD83D\uDD25 " + getStreak();
+      var pct = Math.round((getCompletedDays() / 40) * 100);
+      document.getElementById("progressFill").style.width = pct + "%";
+      document.getElementById("progressLabel").textContent = pct + "% of the war conquered \u2014 " + getCompletedDays() + " of 40 battles won";
+    } else {
+      document.getElementById("streakDisplay").innerHTML = "\uD83D\uDD25 0";
+    }
+
+    var container = document.getElementById("dayCards");
+    var scheduleView = document.getElementById("scheduleView");
+    container.innerHTML = "";
+
+    if (currentView === "schedule") {
+      container.classList.add("hidden");
+      scheduleView.classList.remove("hidden");
+      return;
+    } else {
+      scheduleView.classList.add("hidden");
+      container.classList.remove("hidden");
+    }
+
+    var days = [];
+    if (currentView === "today") {
+      if (cd >= 1 && cd <= 40) days = [cd];
+      else if (cd < 1) days = [1];
+      else days = [40];
+    } else {
+      for (var dd = 1; dd <= 40; dd++) days.push(dd);
+    }
+
+    for (var di = 0; di < days.length; di++) {
+      var day = days[di];
+      var s = SCHEDULE[day - 1];
+      var isToday = day === cd;
+      var complete = isDayComplete(day);
+      var phase = getPhase(day);
+      var dateStr = getDateForDay(day);
+
+      var card = document.createElement("div");
+      card.className = "day-card" + (isToday ? " today" : "") + (complete ? " completed" : "");
+
+      var badges = "";
+      if (isToday) badges += '<span class="today-badge">\u2694 BATTLE TODAY</span>';
+      if (complete) badges += '<span class="done-badge">\u2713 VICTORY</span>';
+
+      var dosesHtml = "";
+      for (var ti = 0; ti < s.times.length; ti++) {
+        var tk = isDoseTaken(day, ti);
+        dosesHtml += '<div class="dose-btn ' + (tk ? "taken" : "") + '" onclick="toggleDose(' + day + ',' + ti + ')">'
+          + '<div class="check">' + (tk ? "\u2694" : "") + '</div>'
+          + '<div class="dose-info">'
+          + '<span class="dose-time">' + s.times[ti] + '</span>'
+          + '<span class="dose-label">Round ' + (ti+1) + ' of ' + s.times.length + '</span>'
+          + '</div></div>';
+      }
+
+      card.innerHTML = '<div class="day-header">'
+        + '<div class="day-title">\u2694 Day ' + day + ' ' + badges + '</div>'
+        + '<div class="day-meta">' + dateStr + ' \u00B7 <span style="color:' + phase.color + ';font-weight:700">' + phase.name + '</span> \u00B7 ' + s.freq + '</div>'
+        + '</div><div class="doses">' + dosesHtml + '</div>';
+
+      container.appendChild(card);
+    }
+  }
+
+  // Create floating particles
+  var pc = document.getElementById("particles");
+  for (var pi = 0; pi < 20; pi++) {
+    var p = document.createElement("div");
+    p.className = "particle";
+    p.style.left = Math.random() * 100 + "%";
+    p.style.animationDelay = Math.random() * 6 + "s";
+    p.style.animationDuration = (4 + Math.random() * 4) + "s";
+    pc.appendChild(p);
+  }
+
+  if (data.startDate) document.getElementById("startDate").value = data.startDate;
+  render();
+
+})();
+</script>
+</body>
+</html>
