@@ -1,0 +1,1048 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0, maximum-scale=1.0, user-scalable=no">
+<title>Cytisine Warrior - Quit Nicotine Forest</title>
+<style>
+  @import url('https://fonts.googleapis.com/css2?family=Inter:wght@400;600;700;900&family=Playfair+Display:ital,wght@1,600&display=swap');
+
+  :root {
+    --bg-dark: #0a1a0f;
+    --bg-card: #112118;
+    --bg-card2: #1a2e22;
+    --green1: #2ecc71;
+    --green2: #27ae60;
+    --green3: #1abc9c;
+    --gold: #f1c40f;
+    --amber: #e67e22;
+    --red: #e74c3c;
+    --text: #e8f5e9;
+    --text-dim: #7fad8a;
+    --text-bright: #ffffff;
+    --shadow: 0 4px 24px rgba(0,0,0,0.4);
+  }
+
+  * { margin:0; padding:0; box-sizing:border-box; }
+
+  body {
+    font-family: 'Inter', sans-serif;
+    background: var(--bg-dark);
+    color: var(--text);
+    min-height: 100vh;
+    overflow-x: hidden;
+  }
+
+  .container {
+    max-width: 480px;
+    margin: 0 auto;
+    padding: 16px;
+    padding-bottom: 100px;
+  }
+
+  /* HEADER */
+  .header {
+    text-align: center;
+    padding: 20px 0 10px;
+  }
+  .header h1 {
+    font-size: 1.6rem;
+    font-weight: 900;
+    background: linear-gradient(135deg, var(--green1), var(--green3));
+    -webkit-background-clip: text;
+    -webkit-text-fill-color: transparent;
+    letter-spacing: -0.5px;
+  }
+  .header .subtitle {
+    font-size: 0.8rem;
+    color: var(--text-dim);
+    margin-top: 4px;
+  }
+
+  /* FOREST CANVAS */
+  .forest-wrap {
+    position: relative;
+    width: 100%;
+    height: 260px;
+    border-radius: 16px;
+    overflow: hidden;
+    margin: 12px 0;
+    background: linear-gradient(180deg, #0d1f14 0%, #112a18 40%, #1a3a22 70%, #1e4428 100%);
+    border: 1px solid rgba(46,204,113,0.15);
+  }
+  #forestCanvas {
+    width: 100%;
+    height: 100%;
+  }
+
+  /* STATS ROW */
+  .stats-row {
+    display: grid;
+    grid-template-columns: 1fr 1fr 1fr;
+    gap: 8px;
+    margin: 12px 0;
+  }
+  .stat-card {
+    background: var(--bg-card);
+    border-radius: 12px;
+    padding: 12px 8px;
+    text-align: center;
+    border: 1px solid rgba(46,204,113,0.1);
+  }
+  .stat-card .stat-value {
+    font-size: 1.4rem;
+    font-weight: 900;
+    color: var(--green1);
+  }
+  .stat-card .stat-value.gold { color: var(--gold); }
+  .stat-card .stat-label {
+    font-size: 0.65rem;
+    color: var(--text-dim);
+    text-transform: uppercase;
+    letter-spacing: 0.5px;
+    margin-top: 2px;
+  }
+
+  /* PHASE INDICATOR */
+  .phase-banner {
+    background: linear-gradient(135deg, var(--bg-card2), var(--bg-card));
+    border-radius: 12px;
+    padding: 14px 16px;
+    margin: 12px 0;
+    border-left: 4px solid var(--green1);
+  }
+  .phase-banner .phase-title {
+    font-size: 0.9rem;
+    font-weight: 700;
+    color: var(--green1);
+  }
+  .phase-banner .phase-detail {
+    font-size: 0.75rem;
+    color: var(--text-dim);
+    margin-top: 4px;
+  }
+
+  /* TIMER */
+  .timer-section {
+    background: var(--bg-card);
+    border-radius: 16px;
+    padding: 20px;
+    margin: 12px 0;
+    text-align: center;
+    border: 1px solid rgba(46,204,113,0.1);
+  }
+  .timer-label {
+    font-size: 0.7rem;
+    text-transform: uppercase;
+    letter-spacing: 1px;
+    color: var(--text-dim);
+    margin-bottom: 8px;
+  }
+  .timer-display {
+    font-size: 3rem;
+    font-weight: 900;
+    font-variant-numeric: tabular-nums;
+    color: var(--green1);
+    line-height: 1;
+  }
+  .timer-display.urgent { color: var(--amber); }
+  .timer-display.overdue { color: var(--red); animation: pulse 1s infinite; }
+  @keyframes pulse { 0%,100%{opacity:1} 50%{opacity:0.5} }
+  .timer-sub {
+    font-size: 0.75rem;
+    color: var(--text-dim);
+    margin-top: 6px;
+  }
+
+  /* DOSE GRID */
+  .dose-section {
+    margin: 12px 0;
+  }
+  .dose-section h3 {
+    font-size: 0.8rem;
+    color: var(--text-dim);
+    text-transform: uppercase;
+    letter-spacing: 1px;
+    margin-bottom: 10px;
+  }
+  .dose-grid {
+    display: flex;
+    gap: 8px;
+    flex-wrap: wrap;
+  }
+  .dose-btn {
+    width: 56px;
+    height: 56px;
+    border-radius: 50%;
+    border: 2px solid rgba(46,204,113,0.3);
+    background: var(--bg-card);
+    color: var(--text-dim);
+    font-size: 0.75rem;
+    font-weight: 700;
+    cursor: pointer;
+    transition: all 0.3s;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+  }
+  .dose-btn:hover { border-color: var(--green1); }
+  .dose-btn.taken {
+    background: var(--green2);
+    border-color: var(--green1);
+    color: white;
+    box-shadow: 0 0 16px rgba(46,204,113,0.3);
+  }
+  .dose-btn.taken::after {
+    content: '✓';
+    font-size: 1.2rem;
+  }
+  .dose-btn.taken span { display: none; }
+  .dose-btn:disabled { opacity: 0.4; cursor: not-allowed; }
+
+  /* BIBLE VERSE */
+  .verse-card {
+    background: linear-gradient(135deg, #1a2a1e, #0f1f14);
+    border-radius: 12px;
+    padding: 16px;
+    margin: 12px 0;
+    border: 1px solid rgba(241,196,15,0.1);
+    position: relative;
+  }
+  .verse-card::before {
+    content: '"';
+    position: absolute;
+    top: -4px;
+    left: 12px;
+    font-size: 3rem;
+    color: rgba(241,196,15,0.15);
+    font-family: 'Playfair Display', serif;
+  }
+  .verse-text {
+    font-family: 'Playfair Display', serif;
+    font-style: italic;
+    font-size: 0.9rem;
+    line-height: 1.5;
+    color: var(--text);
+    padding-left: 8px;
+  }
+  .verse-ref {
+    font-family: 'Inter', sans-serif;
+    font-style: normal;
+    font-size: 0.7rem;
+    color: var(--gold);
+    margin-top: 8px;
+    text-align: right;
+  }
+
+  /* PANIC BUTTON */
+  .panic-btn {
+    display: block;
+    width: 100%;
+    padding: 16px;
+    border-radius: 12px;
+    border: 2px solid var(--red);
+    background: rgba(231,76,60,0.1);
+    color: var(--red);
+    font-size: 1rem;
+    font-weight: 700;
+    cursor: pointer;
+    margin: 16px 0;
+    transition: all 0.3s;
+    text-transform: uppercase;
+    letter-spacing: 1px;
+  }
+  .panic-btn:hover {
+    background: var(--red);
+    color: white;
+  }
+
+  /* PANIC MODAL */
+  .modal-overlay {
+    display: none;
+    position: fixed;
+    top: 0; left: 0;
+    width: 100%; height: 100%;
+    background: rgba(0,0,0,0.85);
+    z-index: 1000;
+    align-items: center;
+    justify-content: center;
+    padding: 16px;
+  }
+  .modal-overlay.active { display: flex; }
+  .modal {
+    background: linear-gradient(180deg, #1a0a0a, #0a1a0f);
+    border-radius: 20px;
+    padding: 28px 24px;
+    max-width: 420px;
+    width: 100%;
+    text-align: center;
+    border: 2px solid var(--red);
+    animation: modalIn 0.3s ease;
+    max-height: 90vh;
+    overflow-y: auto;
+  }
+  @keyframes modalIn { from{transform:scale(0.8);opacity:0} to{transform:scale(1);opacity:1} }
+  .modal h2 {
+    font-size: 1.5rem;
+    color: var(--red);
+    margin-bottom: 16px;
+  }
+  .modal .panic-message {
+    font-size: 1rem;
+    line-height: 1.6;
+    color: var(--text);
+    margin-bottom: 16px;
+    text-align: left;
+  }
+  .modal .panic-verse {
+    font-family: 'Playfair Display', serif;
+    font-style: italic;
+    font-size: 1rem;
+    color: var(--gold);
+    margin: 16px 0;
+    line-height: 1.5;
+    padding: 16px;
+    background: rgba(241,196,15,0.05);
+    border-radius: 10px;
+    border: 1px solid rgba(241,196,15,0.15);
+  }
+  .modal .close-btn {
+    display: inline-block;
+    padding: 14px 40px;
+    border-radius: 10px;
+    border: none;
+    background: var(--green2);
+    color: white;
+    font-size: 1rem;
+    font-weight: 700;
+    cursor: pointer;
+    margin-top: 12px;
+    transition: background 0.3s;
+  }
+  .modal .close-btn:hover { background: var(--green1); }
+
+  /* MONEY SECTION */
+  .money-card {
+    background: linear-gradient(135deg, #1a1f0f, #112118);
+    border-radius: 12px;
+    padding: 16px;
+    margin: 12px 0;
+    border: 1px solid rgba(241,196,15,0.15);
+  }
+  .money-card h3 {
+    font-size: 0.75rem;
+    color: var(--gold);
+    text-transform: uppercase;
+    letter-spacing: 1px;
+    margin-bottom: 8px;
+  }
+  .money-amount {
+    font-size: 2.2rem;
+    font-weight: 900;
+    color: var(--gold);
+  }
+  .money-detail {
+    font-size: 0.75rem;
+    color: var(--text-dim);
+    margin-top: 4px;
+  }
+
+  /* PROGRESS BAR */
+  .progress-wrap {
+    margin: 12px 0;
+  }
+  .progress-wrap .prog-label {
+    display: flex;
+    justify-content: space-between;
+    font-size: 0.7rem;
+    color: var(--text-dim);
+    margin-bottom: 6px;
+  }
+  .progress-bar {
+    height: 8px;
+    background: var(--bg-card);
+    border-radius: 4px;
+    overflow: hidden;
+  }
+  .progress-fill {
+    height: 100%;
+    background: linear-gradient(90deg, var(--green2), var(--green1), var(--green3));
+    border-radius: 4px;
+    transition: width 0.5s ease;
+  }
+
+  /* SETUP SCREEN */
+  .setup-screen {
+    display: flex;
+    flex-direction: column;
+    align-items: center;
+    justify-content: center;
+    min-height: 80vh;
+    text-align: center;
+    padding: 20px;
+  }
+  .setup-screen h1 {
+    font-size: 2rem;
+    font-weight: 900;
+    background: linear-gradient(135deg, var(--green1), var(--green3));
+    -webkit-background-clip: text;
+    -webkit-text-fill-color: transparent;
+    margin-bottom: 8px;
+  }
+  .setup-screen p {
+    color: var(--text-dim);
+    margin-bottom: 24px;
+    font-size: 0.9rem;
+    line-height: 1.5;
+  }
+  .setup-screen .start-btn {
+    padding: 16px 48px;
+    border-radius: 12px;
+    border: none;
+    background: linear-gradient(135deg, var(--green2), var(--green1));
+    color: white;
+    font-size: 1.1rem;
+    font-weight: 700;
+    cursor: pointer;
+    transition: transform 0.2s;
+    box-shadow: 0 4px 20px rgba(46,204,113,0.3);
+  }
+  .setup-screen .start-btn:hover { transform: scale(1.05); }
+  .setup-verse {
+    font-family: 'Playfair Display', serif;
+    font-style: italic;
+    color: var(--text-dim);
+    font-size: 0.85rem;
+    margin-top: 24px;
+    max-width: 320px;
+    line-height: 1.5;
+  }
+
+  /* RESET */
+  .reset-area {
+    text-align: center;
+    margin: 20px 0;
+  }
+  .reset-btn {
+    background: none;
+    border: 1px solid rgba(231,76,60,0.3);
+    color: var(--text-dim);
+    padding: 8px 16px;
+    border-radius: 8px;
+    font-size: 0.7rem;
+    cursor: pointer;
+  }
+
+  /* POST-QUIT CELEBRATION */
+  .celebration {
+    text-align: center;
+    padding: 20px;
+    background: linear-gradient(135deg, rgba(46,204,113,0.1), rgba(26,188,156,0.05));
+    border-radius: 16px;
+    border: 1px solid rgba(46,204,113,0.2);
+    margin: 12px 0;
+  }
+  .celebration h2 {
+    font-size: 1.3rem;
+    color: var(--green1);
+    margin-bottom: 6px;
+  }
+  .celebration p {
+    color: var(--text-dim);
+    font-size: 0.85rem;
+  }
+
+  /* DAY HISTORY */
+  .day-dots {
+    display: flex;
+    flex-wrap: wrap;
+    gap: 4px;
+    margin: 12px 0;
+    justify-content: center;
+  }
+  .day-dot {
+    width: 10px;
+    height: 10px;
+    border-radius: 50%;
+    background: var(--bg-card);
+    border: 1px solid rgba(46,204,113,0.2);
+  }
+  .day-dot.complete {
+    background: var(--green1);
+    border-color: var(--green1);
+    box-shadow: 0 0 4px rgba(46,204,113,0.4);
+  }
+  .day-dot.today {
+    border-color: var(--gold);
+    box-shadow: 0 0 6px rgba(241,196,15,0.4);
+  }
+</style>
+</head>
+<body>
+
+<div class="container" id="app"></div>
+
+<!-- PANIC MODAL -->
+<div class="modal-overlay" id="panicModal">
+  <div class="modal" id="panicContent"></div>
+</div>
+
+<script>
+// ============ DATA ============
+const PHASES = [
+  { dayStart:1,  dayEnd:3,  interval:2,    maxDoses:6, label:"Phase 1 — Loading", desc:"1 tablet every 2 hours · 6 per day" },
+  { dayStart:4,  dayEnd:12, interval:2.5,  maxDoses:6, label:"Phase 2 — Building", desc:"1 tablet every 2.5 hours · 6 per day" },
+  { dayStart:13, dayEnd:16, interval:3,    maxDoses:4, label:"Phase 3 — Tapering", desc:"1 tablet every 3 hours · 4 per day" },
+  { dayStart:17, dayEnd:20, interval:5,    maxDoses:3, label:"Phase 4 — Reducing", desc:"1 tablet every 5 hours · 3 per day" },
+  { dayStart:21, dayEnd:25, interval:24,   maxDoses:2, label:"Phase 5 — Final Doses", desc:"1-2 tablets per day" },
+  { dayStart:26, dayEnd:50, interval:24,   maxDoses:1, label:"Phase 6 — One A Day", desc:"1 tablet per day · Almost free" },
+];
+
+const BIBLE_VERSES = [
+  { text:"No temptation has overtaken you except what is common to mankind. And God is faithful; he will not let you be tempted beyond what you can bear.", ref:"1 Corinthians 10:13" },
+  { text:"I can do all things through Christ who strengthens me.", ref:"Philippians 4:13" },
+  { text:"Therefore, if anyone is in Christ, the new creation has come: The old has gone, the new is here!", ref:"2 Corinthians 5:17" },
+  { text:"Be strong and courageous. Do not be afraid; do not be discouraged, for the Lord your God will be with you wherever you go.", ref:"Joshua 1:9" },
+  { text:"But those who hope in the Lord will renew their strength. They will soar on wings like eagles; they will run and not grow weary.", ref:"Isaiah 40:31" },
+  { text:"For I know the plans I have for you, declares the Lord, plans to prosper you and not to harm you, plans to give you hope and a future.", ref:"Jeremiah 29:11" },
+  { text:"Cast all your anxiety on him because he cares for you.", ref:"1 Peter 5:7" },
+  { text:"The Lord is my strength and my shield; my heart trusts in him, and he helps me.", ref:"Psalm 28:7" },
+  { text:"Do you not know that your bodies are temples of the Holy Spirit, who is in you, whom you have received from God?", ref:"1 Corinthians 6:19" },
+  { text:"He gives strength to the weary and increases the power of the weak.", ref:"Isaiah 40:29" },
+  { text:"Have I not commanded you? Be strong and courageous. Do not be afraid; do not be discouraged.", ref:"Joshua 1:9" },
+  { text:"The Spirit God gave us does not make us timid, but gives us power, love and self-discipline.", ref:"2 Timothy 1:7" },
+  { text:"Come to me, all you who are weary and burdened, and I will give you rest.", ref:"Matthew 11:28" },
+  { text:"When I am afraid, I put my trust in you.", ref:"Psalm 56:3" },
+  { text:"He who began a good work in you will carry it on to completion.", ref:"Philippians 1:6" },
+  { text:"The righteous cry out, and the Lord hears them; he delivers them from all their troubles.", ref:"Psalm 34:17" },
+  { text:"Submit yourselves, then, to God. Resist the devil, and he will flee from you.", ref:"James 4:7" },
+  { text:"God is our refuge and strength, an ever-present help in trouble.", ref:"Psalm 46:1" },
+  { text:"Forget the former things; do not dwell on the past. See, I am doing a new thing!", ref:"Isaiah 43:18-19" },
+  { text:"Be on your guard; stand firm in the faith; be courageous; be strong.", ref:"1 Corinthians 16:13" },
+  { text:"The Lord himself goes before you and will be with you; he will never leave you nor forsake you.", ref:"Deuteronomy 31:8" },
+  { text:"Create in me a pure heart, O God, and renew a steadfast spirit within me.", ref:"Psalm 51:10" },
+  { text:"Blessed is the one who perseveres under trial because, having stood the test, that person will receive the crown of life.", ref:"James 1:12" },
+  { text:"Set your minds on things above, not on earthly things.", ref:"Colossians 3:2" },
+  { text:"With man this is impossible, but with God all things are possible.", ref:"Matthew 19:26" },
+];
+
+const PANIC_MESSAGES = [
+  {
+    title: "STOP. READ THIS.",
+    msg: "That pouch will give you 5 minutes of relief from the pain IT CAUSED. Then it resets the clock on your entire recovery. You're not craving nicotine — you're craving the end of withdrawal. And the ONLY way withdrawal ends is by NOT using.<br><br>Your 1-year-old is going to grow up watching how you handle hard moments. Right now, you're choosing what they learn. Be the dad who fought through it.",
+    verse: "No temptation has overtaken you except what is common to mankind. And God is faithful; he will not let you be tempted beyond what you can bear. But when you are tempted, he will also provide a way out so that you can endure it.",
+    ref: "1 Corinthians 10:13"
+  },
+  {
+    title: "THE CRAVING IS A LIE.",
+    msg: "Your brain is telling you that one pouch will make everything better. That's the addiction talking — not you. Remember: nicotine CREATES the anxiety it pretends to fix. The discomfort you're feeling right now IS your brain healing.<br><br>Every minute you resist, your dopamine receptors are literally rebuilding. You are physically becoming a stronger, freer person RIGHT NOW in this moment of pain.",
+    verse: "Blessed is the one who perseveres under trial because, having stood the test, that person will receive the crown of life that the Lord has promised to those who love him.",
+    ref: "James 1:12"
+  },
+  {
+    title: "THINK ABOUT YOUR KIDS.",
+    msg: "Your 12-year-old is old enough to notice. Your 1-year-old will grow up knowing the version of you that comes out of this. You're not just quitting for yourself — you're building the foundation of who they see when they think of their father.<br><br>This craving will pass in 3-5 minutes whether you use or not. Set a timer. Breathe. Walk. Drink cold water. It WILL pass.",
+    verse: "Be strong and courageous. Do not be afraid; do not be discouraged, for the Lord your God will be with you wherever you go.",
+    ref: "Joshua 1:9"
+  },
+  {
+    title: "YOU'VE COME TOO FAR.",
+    msg: "Look at your streak. Look at your forest. Look at the money you've saved. One pouch erases NONE of that progress — but it resets your brain's healing clock back to zero. The nicotine receptors that are finally quieting down will light right back up.<br><br>You built @QuittingZyn. You built the tracker app. You wrote 250 posts to help others. Don't become someone who gives advice they won't follow.",
+    verse: "Let us not become weary in doing good, for at the proper time we will reap a harvest if we do not give up.",
+    ref: "Galatians 6:9"
+  },
+  {
+    title: "FEEL THE PAIN. IT'S HEALING.",
+    msg: "This discomfort is NOT a sign that something is wrong. It's a sign that something is finally going RIGHT. Your brain is recalibrating. Your dopamine system is rebuilding. Your body is flushing out the chains.<br><br>Pain is temporary. Regret lasts. You KNOW how you'll feel 10 minutes after using — guilty, defeated, and right back where you started. Choose the version of yourself you're proud of.",
+    verse: "The Spirit God gave us does not make us timid, but gives us power, love and self-discipline.",
+    ref: "2 Timothy 1:7"
+  }
+];
+
+// ============ STATE ============
+function getState() {
+  const s = localStorage.getItem('cytisine_warrior_v2');
+  return s ? JSON.parse(s) : null;
+}
+function saveState(state) {
+  localStorage.setItem('cytisine_warrior_v2', JSON.stringify(state));
+}
+function initState() {
+  const now = new Date();
+  return {
+    startDate: now.toISOString(),
+    days: {},
+    lastDoseTime: null,
+  };
+}
+
+function getCurrentDay(state) {
+  const start = new Date(state.startDate);
+  start.setHours(0,0,0,0);
+  const now = new Date();
+  now.setHours(0,0,0,0);
+  return Math.floor((now - start) / 86400000) + 1;
+}
+
+function getPhase(day) {
+  for (const p of PHASES) {
+    if (day >= p.dayStart && day <= p.dayEnd) return p;
+  }
+  return null;
+}
+
+function getDayKey(day) { return 'd' + day; }
+
+function getDosesForDay(state, day) {
+  const key = getDayKey(day);
+  return state.days[key] || [];
+}
+
+function getWeeksCompleted(state) {
+  const day = getCurrentDay(state);
+  return Math.floor((day - 1) / 7);
+}
+
+function getMoneySaved(state) {
+  const day = getCurrentDay(state);
+  const weeks = (day - 1) / 7;
+  return (weeks * 30).toFixed(2);
+}
+
+// ============ FOREST DRAWING ============
+function drawForest(canvasEl, day) {
+  const canvas = canvasEl;
+  const dpr = window.devicePixelRatio || 1;
+  const rect = canvas.getBoundingClientRect();
+  canvas.width = rect.width * dpr;
+  canvas.height = rect.height * dpr;
+  const ctx = canvas.getContext('2d');
+  ctx.scale(dpr, dpr);
+  const W = rect.width;
+  const H = rect.height;
+
+  // Sky gradient
+  const grad = ctx.createLinearGradient(0, 0, 0, H);
+  if (day > 50) {
+    grad.addColorStop(0, '#0a2a1a');
+    grad.addColorStop(0.5, '#0f3a22');
+    grad.addColorStop(1, '#1a5a30');
+  } else if (day > 25) {
+    grad.addColorStop(0, '#0a1f14');
+    grad.addColorStop(0.5, '#0f2a1a');
+    grad.addColorStop(1, '#1a4428');
+  } else {
+    grad.addColorStop(0, '#0d1a12');
+    grad.addColorStop(0.5, '#0f2218');
+    grad.addColorStop(1, '#142a1c');
+  }
+  ctx.fillStyle = grad;
+  ctx.fillRect(0, 0, W, H);
+
+  // Stars
+  const starCount = Math.min(day * 3, 100);
+  for (let i = 0; i < starCount; i++) {
+    const sx = seededRandom(i * 7 + 1) * W;
+    const sy = seededRandom(i * 13 + 3) * (H * 0.5);
+    const sr = seededRandom(i * 19 + 7) * 1.5 + 0.3;
+    const sa = 0.3 + seededRandom(i * 23 + 11) * 0.7;
+    ctx.beginPath();
+    ctx.arc(sx, sy, sr, 0, Math.PI * 2);
+    ctx.fillStyle = `rgba(255,255,220,${sa})`;
+    ctx.fill();
+  }
+
+  // Moon (appears after day 10)
+  if (day >= 10) {
+    const moonSize = Math.min((day - 10) * 0.5 + 8, 20);
+    ctx.beginPath();
+    ctx.arc(W - 50, 35, moonSize, 0, Math.PI * 2);
+    ctx.fillStyle = 'rgba(255,255,200,0.15)';
+    ctx.fill();
+    ctx.beginPath();
+    ctx.arc(W - 50, 35, moonSize - 2, 0, Math.PI * 2);
+    ctx.fillStyle = 'rgba(255,255,200,0.25)';
+    ctx.fill();
+  }
+
+  // Ground
+  const groundY = H * 0.78;
+  ctx.beginPath();
+  ctx.moveTo(0, groundY);
+  for (let x = 0; x <= W; x += 10) {
+    ctx.lineTo(x, groundY + Math.sin(x * 0.02) * 4 - 2);
+  }
+  ctx.lineTo(W, H);
+  ctx.lineTo(0, H);
+  ctx.closePath();
+  const gGrad = ctx.createLinearGradient(0, groundY, 0, H);
+  gGrad.addColorStop(0, '#1a3a1a');
+  gGrad.addColorStop(1, '#0d1f0d');
+  ctx.fillStyle = gGrad;
+  ctx.fill();
+
+  // Grass blades
+  for (let x = 0; x < W; x += 3) {
+    const gh = 4 + seededRandom(x * 31) * 8;
+    const gAngle = (seededRandom(x * 17) - 0.5) * 0.3;
+    ctx.beginPath();
+    ctx.moveTo(x, groundY);
+    ctx.quadraticCurveTo(x + gAngle * 10, groundY - gh * 0.6, x + gAngle * 6, groundY - gh);
+    ctx.strokeStyle = `rgba(34,${120 + Math.floor(seededRandom(x*41)*60)},45,0.6)`;
+    ctx.lineWidth = 1;
+    ctx.stroke();
+  }
+
+  // Trees based on days completed
+  const treesToDraw = Math.min(day, 60);
+  const positions = [];
+  for (let i = 0; i < treesToDraw; i++) {
+    const tx = 20 + seededRandom(i * 37 + 5) * (W - 40);
+    const ty = groundY - 2 + seededRandom(i * 43 + 9) * 12 - 6;
+    positions.push({ x: tx, y: ty, idx: i });
+  }
+  positions.sort((a, b) => a.y - b.y);
+
+  for (const pos of positions) {
+    const age = day - pos.idx;
+    const growth = Math.min(age / 10, 1);
+    drawTree(ctx, pos.x, pos.y, growth, pos.idx, day);
+  }
+
+  // Flowers after day 30
+  if (day > 30) {
+    const flowerCount = Math.min((day - 30) * 2, 30);
+    for (let i = 0; i < flowerCount; i++) {
+      const fx = 10 + seededRandom(i * 67 + 200) * (W - 20);
+      const fy = groundY + seededRandom(i * 71 + 210) * 12;
+      const fc = ['#e74c3c','#f1c40f','#e67e22','#9b59b6','#3498db'][i % 5];
+      ctx.beginPath();
+      ctx.arc(fx, fy, 2, 0, Math.PI * 2);
+      ctx.fillStyle = fc;
+      ctx.fill();
+    }
+  }
+
+  // Day label
+  ctx.fillStyle = 'rgba(255,255,255,0.6)';
+  ctx.font = '600 11px Inter, sans-serif';
+  ctx.textAlign = 'left';
+  if (day <= 50) {
+    ctx.fillText(`Day ${day} of 50`, 12, 20);
+  } else {
+    ctx.fillText(`${day - 50} days free & growing`, 12, 20);
+  }
+}
+
+function drawTree(ctx, x, y, growth, idx, currentDay) {
+  if (growth <= 0) return;
+
+  const h = 15 + growth * 55;
+  const trunkW = 2 + growth * 4;
+  const leafR = 5 + growth * 22;
+
+  // Shadow
+  ctx.beginPath();
+  ctx.ellipse(x, y + 2, leafR * 0.5 * growth, 3, 0, 0, Math.PI * 2);
+  ctx.fillStyle = 'rgba(0,0,0,0.15)';
+  ctx.fill();
+
+  // Trunk
+  ctx.beginPath();
+  ctx.moveTo(x - trunkW / 2, y);
+  ctx.lineTo(x - trunkW / 3, y - h);
+  ctx.lineTo(x + trunkW / 3, y - h);
+  ctx.lineTo(x + trunkW / 2, y);
+  ctx.closePath();
+  ctx.fillStyle = `rgb(${80 + Math.floor(seededRandom(idx*53)*30)},${50 + Math.floor(seededRandom(idx*59)*20)},${20 + Math.floor(seededRandom(idx*61)*20)})`;
+  ctx.fill();
+
+  // Canopy layers
+  const shades = [
+    [30, 140, 50],
+    [40, 170, 60],
+    [50, 190, 70],
+    [35, 155, 55],
+  ];
+  const shade = shades[idx % shades.length];
+  for (let l = 0; l < 3; l++) {
+    const lr = leafR * (1 - l * 0.2);
+    const ly = y - h + l * 5 - 5;
+    ctx.beginPath();
+    ctx.arc(x + (l - 1) * 4, ly, lr * growth, 0, Math.PI * 2);
+    const bright = l * 15;
+    ctx.fillStyle = `rgba(${shade[0]+bright},${shade[1]+bright},${shade[2]+bright},${0.7 + growth * 0.3})`;
+    ctx.fill();
+  }
+
+  // Glow for today's tree
+  if (idx === currentDay - 1) {
+    ctx.beginPath();
+    ctx.arc(x, y - h - 5, leafR * growth + 5, 0, Math.PI * 2);
+    ctx.fillStyle = 'rgba(46,204,113,0.08)';
+    ctx.fill();
+  }
+}
+
+function seededRandom(seed) {
+  const x = Math.sin(seed + 1) * 10000;
+  return x - Math.floor(x);
+}
+
+// ============ RENDER ============
+function render() {
+  const state = getState();
+  const app = document.getElementById('app');
+
+  if (!state) {
+    renderSetup(app);
+    return;
+  }
+
+  const day = getCurrentDay(state);
+  const phase = getPhase(day);
+  const dayKey = getDayKey(day);
+  const doses = state.days[dayKey] || [];
+  const isPostProtocol = day > 50;
+  const isPostCytisine = day > 50;
+
+  let html = '';
+
+  // Header
+  html += `<div class="header">
+    <h1>🌲 Cytisine Warrior</h1>
+    <div class="subtitle">${isPostProtocol ? 'FREE & GROWING — You did it, Benton.' : `Day ${day} of 50 — Your forest is growing`}</div>
+  </div>`;
+
+  // Forest
+  html += `<div class="forest-wrap"><canvas id="forestCanvas"></canvas></div>`;
+
+  // Day dots
+  html += `<div class="day-dots">`;
+  for (let d = 1; d <= Math.max(50, day); d++) {
+    const dk = getDayKey(d);
+    const dd = state.days[dk] || [];
+    const p = getPhase(d);
+    const needed = p ? p.maxDoses : (d <= 50 ? 1 : 1);
+    const complete = d < day || (d === day && dd.length >= needed);
+    const isToday = d === day;
+    html += `<div class="day-dot${complete ? ' complete' : ''}${isToday ? ' today' : ''}" title="Day ${d}"></div>`;
+  }
+  html += `</div>`;
+
+  // Stats
+  const totalDosesTaken = Object.values(state.days).reduce((sum, arr) => sum + arr.length, 0);
+  const moneySaved = getMoneySaved(state);
+  html += `<div class="stats-row">
+    <div class="stat-card"><div class="stat-value">${day}</div><div class="stat-label">${isPostProtocol ? 'Days Free' : 'Current Day'}</div></div>
+    <div class="stat-card"><div class="stat-value gold">$${parseFloat(moneySaved).toFixed(0)}</div><div class="stat-label">Money Saved</div></div>
+    <div class="stat-card"><div class="stat-value">${totalDosesTaken}</div><div class="stat-label">Doses Taken</div></div>
+  </div>`;
+
+  // Money card
+  const weeksComplete = Math.floor((day - 1) / 7);
+  html += `<div class="money-card">
+    <h3>💰 Money Not Wasted on Pouches</h3>
+    <div class="money-amount">$${parseFloat(moneySaved).toFixed(2)}</div>
+    <div class="money-detail">${weeksComplete} full week${weeksComplete !== 1 ? 's' : ''} complete × $30/week${day <= 50 ? ` · $${(50/7*30).toFixed(0)} projected by day 50` : ''}</div>
+  </div>`;
+
+  // Progress bar
+  const pct = Math.min((day / 50) * 100, 100);
+  html += `<div class="progress-wrap">
+    <div class="prog-label"><span>${isPostProtocol ? 'Protocol Complete ✓' : 'Protocol Progress'}</span><span>${Math.min(day,50)}/50 days</span></div>
+    <div class="progress-bar"><div class="progress-fill" style="width:${pct}%"></div></div>
+  </div>`;
+
+  if (isPostProtocol) {
+    // POST-QUIT TRACKER
+    const freeDays = day - 50;
+    html += `<div class="celebration">
+      <h2>🌳 You Are Free, Benton.</h2>
+      <p>The protocol is done. You've been nicotine-free for <strong>${freeDays} day${freeDays!==1?'s':''}</strong> beyond the program.<br>Your forest has ${day} trees and counting. Keep growing.</p>
+    </div>`;
+  } else if (phase) {
+    // Phase banner
+    html += `<div class="phase-banner">
+      <div class="phase-title">${phase.label}</div>
+      <div class="phase-detail">${phase.desc} · Days ${phase.dayStart}–${phase.dayEnd}</div>
+    </div>`;
+
+    // Timer
+    const maxDoses = phase.maxDoses;
+    const dosesTaken = doses.length;
+    const allDone = dosesTaken >= maxDoses;
+
+    if (allDone) {
+      html += `<div class="timer-section">
+        <div class="timer-label">Today's Doses Complete</div>
+        <div class="timer-display" style="font-size:1.5rem;color:var(--green1);">ALL DONE ✓</div>
+        <div class="timer-sub">Rest and recover. Tomorrow your forest grows another tree.</div>
+      </div>`;
+    } else if (dosesTaken > 0) {
+      html += `<div class="timer-section">
+        <div class="timer-label">Next Dose In</div>
+        <div class="timer-display" id="countdownTimer">--:--:--</div>
+        <div class="timer-sub" id="timerSub">Dose ${dosesTaken + 1} of ${maxDoses}</div>
+      </div>`;
+    } else {
+      html += `<div class="timer-section">
+        <div class="timer-label">Ready for First Dose</div>
+        <div class="timer-display" style="font-size:1.5rem;">Take Dose 1</div>
+        <div class="timer-sub">Tap the first circle below to start your day</div>
+      </div>`;
+    }
+
+    // Dose buttons
+    html += `<div class="dose-section"><h3>Today's Doses (${dosesTaken}/${maxDoses})</h3><div class="dose-grid">`;
+    for (let i = 0; i < maxDoses; i++) {
+      const taken = i < dosesTaken;
+      const isNext = i === dosesTaken;
+      if (taken) {
+        html += `<div class="dose-btn taken"><span></span></div>`;
+      } else {
+        html += `<button class="dose-btn${isNext ? '' : ''}" onclick="takeDose(${i})" ${!isNext ? 'disabled' : ''}><span>${i + 1}</span></button>`;
+      }
+    }
+    html += `</div></div>`;
+  }
+
+  // Bible verse
+  const verse = BIBLE_VERSES[day % BIBLE_VERSES.length];
+  html += `<div class="verse-card">
+    <div class="verse-text">${verse.text}</div>
+    <div class="verse-ref">— ${verse.ref}</div>
+  </div>`;
+
+  // Panic button
+  html += `<button class="panic-btn" onclick="showPanic()">🚨 Panic Button — I Want a Pouch</button>`;
+
+  // Reset
+  html += `<div class="reset-area"><button class="reset-btn" onclick="resetApp()">Reset All Data</button></div>`;
+
+  app.innerHTML = html;
+
+  // Draw forest
+  setTimeout(() => {
+    const c = document.getElementById('forestCanvas');
+    if (c) drawForest(c, day);
+  }, 50);
+
+  // Start timer
+  if (!isPostProtocol && phase && doses.length > 0 && doses.length < phase.maxDoses) {
+    startTimer(state, phase);
+  }
+}
+
+function renderSetup(app) {
+  app.innerHTML = `<div class="setup-screen">
+    <h1>🌲 Cytisine Warrior</h1>
+    <p>A 50-day journey to freedom from nicotine pouches.<br>Watch your forest grow as you reclaim your life.</p>
+    <button class="start-btn" onclick="startJourney()">Plant My First Tree</button>
+    <div class="setup-verse">"Therefore, if anyone is in Christ, the new creation has come: The old has gone, the new is here!"<br><br>— 2 Corinthians 5:17</div>
+  </div>`;
+}
+
+// ============ ACTIONS ============
+function startJourney() {
+  const state = initState();
+  saveState(state);
+  render();
+}
+
+function takeDose(index) {
+  const state = getState();
+  if (!state) return;
+  const day = getCurrentDay(state);
+  const dayKey = getDayKey(day);
+  if (!state.days[dayKey]) state.days[dayKey] = [];
+  const phase = getPhase(day);
+  if (!phase) return;
+  if (state.days[dayKey].length >= phase.maxDoses) return;
+  if (index !== state.days[dayKey].length) return;
+
+  state.days[dayKey].push(new Date().toISOString());
+  state.lastDoseTime = new Date().toISOString();
+  saveState(state);
+  render();
+}
+
+function showPanic() {
+  const p = PANIC_MESSAGES[Math.floor(Math.random() * PANIC_MESSAGES.length)];
+  const modal = document.getElementById('panicModal');
+  const content = document.getElementById('panicContent');
+  content.innerHTML = `
+    <h2>🚨 ${p.title}</h2>
+    <div class="panic-message">${p.msg}</div>
+    <div class="panic-verse">"${p.verse}"<br><br>— ${p.ref}</div>
+    <button class="close-btn" onclick="closePanic()">I'm Staying Quit 💪</button>
+  `;
+  modal.classList.add('active');
+}
+
+function closePanic() {
+  document.getElementById('panicModal').classList.remove('active');
+}
+
+function resetApp() {
+  if (confirm('Are you sure? This will erase all progress. Your forest will be gone.')) {
+    if (confirm('Really? Think about your kids, Benton. Only reset if starting fresh.')) {
+      localStorage.removeItem('cytisine_warrior_v2');
+      render();
+    }
+  }
+}
+
+// ============ TIMER ============
+let timerInterval = null;
+function startTimer(state, phase) {
+  if (timerInterval) clearInterval(timerInterval);
+  timerInterval = setInterval(() => {
+    const el = document.getElementById('countdownTimer');
+    const sub = document.getElementById('timerSub');
+    if (!el) { clearInterval(timerInterval); return; }
+
+    const now = new Date();
+    const lastDose = new Date(state.lastDoseTime);
+    const nextDue = new Date(lastDose.getTime() + phase.interval * 3600000);
+    const diff = nextDue - now;
+
+    const day = getCurrentDay(state);
+    const dayKey = getDayKey(day);
+    const dosesTaken = (state.days[dayKey] || []).length;
+
+    if (diff > 0) {
+      const h = Math.floor(diff / 3600000);
+      const m = Math.floor((diff % 3600000) / 60000);
+      const s = Math.floor((diff % 60000) / 1000);
+      el.textContent = `${String(h).padStart(2,'0')}:${String(m).padStart(2,'0')}:${String(s).padStart(2,'0')}`;
+      el.className = 'timer-display' + (diff < 600000 ? ' urgent' : '');
+      sub.textContent = `Dose ${dosesTaken + 1} of ${phase.maxDoses} · ${phase.interval}h intervals`;
+    } else {
+      const overdue = Math.abs(diff);
+      const m = Math.floor(overdue / 60000);
+      el.textContent = `TAKE DOSE NOW`;
+      el.className = 'timer-display overdue';
+      sub.textContent = `${m} min overdue · Dose ${dosesTaken + 1} of ${phase.maxDoses}`;
+    }
+  }, 1000);
+}
+
+// ============ INIT ============
+render();
+window.addEventListener('resize', () => {
+  const c = document.getElementById('forestCanvas');
+  const state = getState();
+  if (c && state) drawForest(c, getCurrentDay(state));
+});
+
+// Auto-refresh at midnight
+setInterval(() => {
+  const now = new Date();
+  if (now.getHours() === 0 && now.getMinutes() === 0 && now.getSeconds() < 2) {
+    render();
+  }
+}, 1000);
+</script>
+</body>
+</html>
